@@ -20,7 +20,7 @@ function draw() {
   scene.display();
 }
 
-function mouseClicked() {
+function mouseReleased() {
   let mouse_col = mouseX / size_x * scene.params.n_columns | 0;
   let mouse_row = mouseY / size_y * scene.params.n_rows | 0;
   scene.draw_glider(mouse_row, mouse_col);
