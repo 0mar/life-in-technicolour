@@ -28,7 +28,7 @@ function mouseReleased() {
 class Params {
   constructor() {
     this.n_rows = 50;
-    this.n_columns = this.n_rows / size_y * size_x;
+    this.n_columns = (this.n_rows / size_y * size_x)|0;
     this.seed = 10;
     this.initial_fill = 0.2;
     this.decay = 0.9;
@@ -112,8 +112,11 @@ class Scene {
     for (let c_row = - 1; c_row <= 1; c_row++) {
       for (let c_col = -1; c_col <= 1; c_col++) {
         console.log(c_row, c_col);
-        if (this.valid_index(c_row + row, c_col + column)) {
-          this.grid[c_row + row][c_col + column] = glider[c_row + 1][c_col + 1];
+        let new_row = c_row + row;
+        let new_column = c_col + column;
+        if (this.valid_index(new_row, new_column)) {
+          this.grid[new_row][new_column] = glider[c_row + 1][c_col + 1];
+          this.identifier[new_row][new_column] = this.get_current_color();
         }
       }
     }
