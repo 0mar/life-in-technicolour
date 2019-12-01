@@ -1,5 +1,5 @@
 let scene;
-let size_x = window.innerWidth;
+let size_x =document.getElementById("gol_canvas").offsetWidth;
 let size_y = window.innerHeight;
 let gliders = [[[1, 0, 0], [0, 1, 1], [1, 1, 0]],
 [[0, 1, 0], [0, 1, 1], [1, 0, 1]],
@@ -8,13 +8,14 @@ let gliders = [[[1, 0, 0], [0, 1, 1], [1, 1, 0]],
 
 
 function setup() {
-  createCanvas(size_x, size_y);
+  let canvas = createCanvas(size_x, size_y);
   scene = new Scene();
   frameRate(60);
+  canvas.parent('gol_canvas');
 }
 
 function draw() {
-  background(255);
+  background(34);
   scene.counter++
   scene.update();
   scene.display();
@@ -44,6 +45,8 @@ class Scene {
     this.identifier = [[]];
 
     this.cell_size = [size_y / this.params.n_rows, size_x / this.params.n_columns];
+    this.new_grid = [[]];
+    this.new_on = [[]];
     this.fill_grid();
   }
 
@@ -73,10 +76,13 @@ class Scene {
       this.grid[row] = [];
       this.last_on[row] = [];
       this.identifier[row] = [];
+      this.new_grid[row] = [];
+      this.new_on[row] = [];
       for (let column = 0; column < this.params.n_columns; column++) {
         this.last_on[row][column] = 0;
         this.identifier[row][column] = 0;
-
+        this.new_grid[row][column] = 0;
+        this.new_on[row][column] = 0;
         if (row >= this.params.n_rows / 2 - size && row < this.params.n_rows / 2 + size) {
           if (column >= this.params.n_columns / 2 - size && column < this.params.n_columns / 2 + size) {
             if (random() < this.params.initial_fill) {
@@ -156,12 +162,12 @@ class Scene {
   display() {
     for (let row = 0; row < this.params.n_rows; row++) {
       for (let column = 0; column < this.params.n_columns; column++) {
-        let c = color('hsba(' + (this.identifier[row][column]) + ', 100%, 50%, ' + this.last_on[row][column] + ')');
+        let c = color('hsba(' + (this.identifier[row][column]) + ', 100%, 80%, ' + this.last_on[row][column] + ')');
         // let c = color('hsba('+(this.identifier[row][column])+', 100%, 50%, '+1+')');
 
         fill(c);
-        stroke(200, 1 - this.last_on[row][column]);
-        rect(column * this.cell_size[1], row * this.cell_size[0], this.cell_size[1], this.cell_size[0]);
+        stroke(200, 0);
+        ellipse(column * this.cell_size[1], row * this.cell_size[0], this.cell_size[1]*1, this.cell_size[0]*1);
       }
     }
   }
