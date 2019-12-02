@@ -9,9 +9,9 @@ let gliders = [[[1, 0, 0], [0, 1, 1], [1, 1, 0]],
 
 function setup() {
   let embedded = document.getElementById('gol_canvas').getAttribute('embed');
-  if (embedded==="1") {
-    size_y = size_x/1.|0;
-    console.log(size_x,size_y);
+  if (embedded === "1") {
+    size_y = size_x / 1. | 0;
+    console.log(size_x, size_y);
   }
   let canvas = createCanvas(size_x, size_y);
   scene = new Scene();
@@ -109,12 +109,6 @@ class Scene {
               }
             }
           }
-
-          // if (row > 2 && row <= 5 && column == 3) {
-          //   this.grid[row][column] = 1;
-          // } else {
-          //   this.grid[row][column] = 0;
-          // }
         }
       }
     }
@@ -175,7 +169,6 @@ class Scene {
       for (let column = 0; column < this.params.n_columns; column++) {
         let c = color('hsba(' + (this.identifiers[i][row][column]) + ', 100%, 80%, ' + this.last_ons[i][row][column] + ')');
         // let c = color('hsba('+(this.identifier[row][column])+', 100%, 50%, '+1+')');
-
         fill(c);
         stroke(200, 0);
         ellipse(column * this.cell_size[1], row * this.cell_size[0], this.cell_size[1] * 1, this.cell_size[0] * 1);
