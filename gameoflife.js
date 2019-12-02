@@ -8,13 +8,17 @@ let gliders = [[[1, 0, 0], [0, 1, 1], [1, 1, 0]],
 
 
 function setup() {
+  let embedded = document.getElementById('gol_canvas').getAttribute('embed');
+  if (embedded==="1") {
+    size_y = size_x/1.|0;
+    console.log(size_x,size_y);
+  }
   let canvas = createCanvas(size_x, size_y);
   scene = new Scene();
   frameRate(60);
   canvas.parent('gol_canvas');
   scene.background = site_background();
   console.log(scene.background['r'], scene.background['g'], scene.background['b'])
-  // canvas.style('display', 'block');
 }
 
 function draw() {
