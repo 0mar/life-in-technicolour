@@ -49,7 +49,7 @@ class Params {
     this.n_columns = (this.n_rows / size_y * size_x) | 0;
     this.seed = random() * 360;
     this.initial_fill = 0.2;
-    this.decay = 0.999;
+    this.decay = 0.8;
   }
 }
 
@@ -167,11 +167,13 @@ class Scene {
     let i = this.counter % 2;
     for (let row = 0; row < this.params.n_rows; row++) {
       for (let column = 0; column < this.params.n_columns; column++) {
+        if (this.last_ons[i][row][column] > 0.1) {
         let c = color('hsba(' + (this.identifiers[i][row][column]) + ', 100%, 80%, ' + this.last_ons[i][row][column] + ')');
         // let c = color('hsba('+(this.identifier[row][column])+', 100%, 50%, '+1+')');
         fill(c);
         stroke(200, 0);
         ellipse(column * this.cell_size[1], row * this.cell_size[0], this.cell_size[1] * 1, this.cell_size[0] * 1);
+        }
       }
     }
   }
