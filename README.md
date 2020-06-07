@@ -6,7 +6,7 @@ This repo is for development. To just play with the animation, click [here][3].
 
 ## Installation
 
-Clone the repository, download p5.
+Clone the repository, and if needed, download p5.
 
 
 ```bash
@@ -16,6 +16,8 @@ wget https://github.com/processing/p5.js/releases/download/1.0.0/p5.js # optiona
 ```
 
 ## Running
+
+The `index.html` loads the p5.js library from a CDN, meaning there's no need to install the library.
 
 To run the script locally, download the p5 library with the last line in the previous code block, then open `index.local.html` in your browser.
 
