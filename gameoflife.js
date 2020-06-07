@@ -8,6 +8,11 @@ let gliders = [[[1, 0, 0], [0, 1, 1], [1, 1, 0]],
 
 
 function setup() {
+  /**
+   * Create a P5.js canvas
+   * This reads the HTML page the script runs on to make the width equal to the width of the `div` component.
+   * It also sets the background color of the GOL to the page background.
+   */
   let embedded = document.getElementById('gol_canvas').getAttribute('embed');
   if (embedded === "1") {
     size_y = size_x / 1. | 0;
@@ -22,6 +27,9 @@ function setup() {
 }
 
 function draw() {
+  /**
+   * Main loop: update the canvas
+   */
   background(scene.background['r'], scene.background['g'], scene.background['b']);
   scene.counter++
   scene.update();
@@ -29,12 +37,19 @@ function draw() {
 }
 
 function mouseReleased() {
+  /**
+   * Draw a glider when the mouse is released.
+   * Different objects can be inserted here
+   */
   let mouse_col = mouseX / size_x * scene.params.n_columns | 0;
   let mouse_row = mouseY / size_y * scene.params.n_rows | 0;
   scene.draw_glider(mouse_row, mouse_col);
 }
 
 function site_background() {
+  /**
+   * Obtain the background color of the page
+   */
   let rgb_string = window.getComputedStyle(document.body, null).getPropertyValue('background-color');
   let vals = rgb_string.substring(rgb_string.indexOf('(') + 1, rgb_string.length - 1).split(', ');
   return {
@@ -43,7 +58,16 @@ function site_background() {
     'b': Number(vals[2])
   };
 }
+
 class Params {
+  /**
+   * Parameters for the game of life simulation
+   * Number of rows (and size of the circles)
+   * Number of columns (given by the number of rows and the screen)
+   * Seed (to reproduce certain configurations
+   * Number of initially alive cells
+   * Decay rate of the lighting up
+   */
   constructor() {
     this.n_rows = 50;
     this.n_columns = (this.n_rows / size_y * size_x) | 0;
@@ -54,6 +78,9 @@ class Params {
 }
 
 class Scene {
+  /**
+   * Abstraction of the canvas to progress the GOL on
+   */
   constructor() {
     this.counter = 0;
     this.params = new Params();
@@ -66,10 +93,16 @@ class Scene {
   }
 
   get_current_color() {
+    /**
+     * We cycle through colours. This is how the color of the current coming-alive cells is determined.
+     */
     return (this.counter * 2 + this.params.seed) % 360 | 0;
   }
 
   num_alive_neighbours(c_row, c_column) {
+    /**
+     * Method that counts the number of neigbours alive of the current cell
+     */
     let i = (this.counter + 1) % 2;
     let tot = 0;
     for (let row = c_row - 1; row <= c_row + 1; row++) {
@@ -87,6 +120,9 @@ class Scene {
   }
 
   fill_grid() {
+    /**
+     * Create a new grid based on the initial alive ratio specified in the parameters.
+     */
     let size = 70;
     for (let i = 0; i < 2; i++) {
       for (let row = 0; row < this.params.n_rows; row++) {
@@ -135,6 +171,12 @@ class Scene {
   }
 
   update() {
+    /**
+     * Compute the new representation of game of life from the old representation and draw it on the Canvas
+     * To save memory and computing power, we do some tricks:
+     * - Store the previous state in the same array as the current state, so we don't need to reinitialize
+     *   the same datastructures each time
+     */
     // let mouse_col = mouseX / size_x * this.params.n_columns | 0;
     // let mouse_row = mouseY/size_y * this.params.n_rows | 0;
     let i = this.counter % 2;
@@ -164,6 +206,10 @@ class Scene {
 
 
   display() {
+    /**
+     * Draw the current state of the GOL to a canvas. For efficiency, we:
+     * - Only draw in locations where a cell has a certain brightness (was alive less than n stages ago)
+     */
     let i = this.counter % 2;
     for (let row = 0; row < this.params.n_rows; row++) {
       for (let column = 0; column < this.params.n_columns; column++) {
