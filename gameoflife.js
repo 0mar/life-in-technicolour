@@ -1,11 +1,11 @@
 let scene;
 let size_x = document.getElementById("gol_canvas").offsetWidth;
 let size_y = window.innerHeight;
-let gliders = [[[1, 0, 0], [0, 1, 1], [1, 1, 0]],
-[[0, 1, 0], [0, 1, 1], [1, 0, 1]],
-[[0, 1, 1], [1, 1, 0], [0, 0, 1]],
-[[1, 0, 1], [1, 1, 0], [0, 1, 0]]];
-
+let gliders = [[1, 0, 0], [0, 1, 1], [1, 1, 0]];
+let lwss = [[1,0,0,1,0],[0,0,0,0,1],[1,0,0,0,1],[0,1,1,1,1],[0,0,0,0,0]];
+let mwss = [[0,0,0,0,0,0,0],[0,1,1,1,0,0,0],[1,1,1,1,1,0,0],[1,1,1,0,1,1,0],[0,0,0,1,1,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]];
+let hwss = [[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,1,1,1,1,0,0],[1,1,1,1,1,1,0],[1,1,1,1,0,1,1],[0,0,0,0,1,1,0],[0,0,0,0,0,0,0]];
+let shapes = [gliders,lwss, mwss, hwss];
 
 function setup() {
   /**
@@ -43,7 +43,7 @@ function mouseReleased() {
    */
   let mouse_col = mouseX / size_x * scene.params.n_columns | 0;
   let mouse_row = mouseY / size_y * scene.params.n_rows | 0;
-  scene.draw_glider(mouse_row, mouse_col);
+  scene.draw_shape(mouse_row, mouse_col);
 }
 
 function site_background() {
@@ -72,7 +72,7 @@ class Params {
     this.n_rows = 50;
     this.n_columns = (this.n_rows / size_y * size_x) | 0;
     this.seed = random() * 360;
-    this.initial_fill = 0.2;
+    this.initial_fill = 0.01;
     this.decay = 0.8;
   }
 }
@@ -154,16 +154,21 @@ class Scene {
     return (row >= 0 && row < this.params.n_rows && column >= 0 && column < this.params.n_columns);
   }
 
-  draw_glider(row, column) {
+  draw_shape(row, column) {
+    let shape_number = (random()*shapes.length) | 0;
+    let rand_bin = (random()*2) | 0;
+    let hor_dir = rand_bin*2 - 1;
+    rand_bin = (random()*2) | 0;
+    let ver_dir = rand_bin*2 - 1;
     let i = (this.counter) % 2;
-    let glider_number = (random() * 4) | 0;
-    let glider = gliders[glider_number];
-    for (let c_row = - 1; c_row <= 1; c_row++) {
-      for (let c_col = -1; c_col <= 1; c_col++) {
-        let new_row = c_row + row;
-        let new_column = c_col + column;
+    let shape = shapes[shape_number];
+    let radius = (shape.length-1)/2;
+    for (let c_row = - radius; c_row <= radius; c_row++) {
+      for (let c_col = -radius; c_col <= radius; c_col++) {
+        let new_row = c_row*hor_dir+ row;
+        let new_column = c_col*ver_dir+ column;
         if (this.valid_index(new_row, new_column)) {
-          this.grids[i][new_row][new_column] = glider[c_row + 1][c_col + 1];
+          this.grids[i][new_row][new_column] = shape[c_row + radius][c_col + radius];
           this.identifiers[i][new_row][new_column] = this.get_current_color();
         }
       }
